@@ -26,6 +26,10 @@ public class captureScript : MonoBehaviour
 				for ( int x = 0; x < 50; ++x )
 				{
 					Color color = tex2D.GetPixel(x,y);
+					
+					// checking alpha
+					if (color.a == 0)
+						continue;
 
 					GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube) as GameObject;
 					cube.transform.position = new Vector3(x,y,0);
