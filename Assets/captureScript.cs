@@ -7,6 +7,7 @@ public class captureScript : MonoBehaviour
 
 	private GameObject[,] cubeMatrix = new GameObject[50, 50];
 	private bool captured = false;
+	private bool physicsUpdate = false;
 	private int elapsedFrame = 0;
 
 	// Use this for initialization
@@ -20,19 +21,18 @@ public class captureScript : MonoBehaviour
 		if (!captured)
 			return;
 
-		for ( int y = 0; y < 50; ++y )
-		{
-			for ( int x = 0; x < 50; ++x )
-			{
-				if (cubeMatrix[x,y] != null)
-				{
-					float cosArgX = (float)((x - 25) * 10 * Mathf.PI / 180.0 + elapsedFrame * Mathf.PI / 180.0);
-					float cosArgY = (float)((y - 25) * 5 * Mathf.PI / 180.0 + elapsedFrame * Mathf.PI / 180.0);
-					float cosArgZ = (float)((x - 25) * 10 * Mathf.PI / 180.0 + (y - 25) * 5 * Mathf.PI / 180.0 + elapsedFrame * Mathf.PI / 180.0);
-					float newX = x + Mathf.Cos(cosArgX);
-					float newY = y + Mathf.Cos(cosArgY);
-					float newZ = 4 * Mathf.Cos(cosArgZ);
-					cubeMatrix[x,y].transform.position = new Vector3(newX,newY,newZ);
+		if (!physicsUpdate) {
+			for (int y = 0; y < 50; ++y) {
+				for (int x = 0; x < 50; ++x) {
+					if (cubeMatrix [x, y] != null) {
+						float cosArgX = (float)((x - 25) * 10 * Mathf.PI / 180.0 + elapsedFrame * Mathf.PI / 180.0);
+						float cosArgY = (float)((y - 25) * 5 * Mathf.PI / 180.0 + elapsedFrame * Mathf.PI / 180.0);
+						float cosArgZ = (float)((x - 25) * 10 * Mathf.PI / 180.0 + (y - 25) * 5 * Mathf.PI / 180.0 + elapsedFrame * Mathf.PI / 180.0);
+						float newX = x + Mathf.Cos (cosArgX);
+						float newY = y + Mathf.Cos (cosArgY);
+						float newZ = 4 * Mathf.Cos (cosArgZ);
+						cubeMatrix [x, y].transform.position = new Vector3 (newX, newY, newZ);
+					}
 				}
 			}
 		}
@@ -60,7 +60,8 @@ public class captureScript : MonoBehaviour
 					cube.transform.position = new Vector3(x,y,0);
 					cube.transform.localScale = new Vector3(1, 1,1);
 
-					Destroy(cube.GetComponent<BoxCollider>());
+					//Destroy(cube.GetComponent<BoxCollider>());
+					cube.AddComponent<Rigidbody>();
 
 					Material mat = new Material(Shader.Find("Diffuse"));
 					mat.color = color;
@@ -70,6 +71,11 @@ public class captureScript : MonoBehaviour
 			}
 
 			captured = true;
+		}
+
+		if (GUILayout.Button ("Run Physics")) 
+		{
+			physicsUpdate = true;
 		}
 	}
 
